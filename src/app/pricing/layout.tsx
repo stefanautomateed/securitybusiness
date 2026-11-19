@@ -4,7 +4,7 @@ import { pricingFaqs } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: { absolute: "Vulnerability Scanner Pricing: Free, $29 & $79 Plans | ScanMySaaS" },
   description:
-    "Vulnerability scanner pricing: start free with a website scan and public repo scans. Starter $29/month (10 scans), Pro $79/month (30 scans) with private repo and AI code review.",
+    "Vulnerability scanner pricing: free website and public repo scans. Starter $29/mo (10 website scans), Pro $79/mo (30), both with private repos and AI review.",
   alternates: {
     canonical: "https://www.scanmysaas.com/pricing",
   },
@@ -27,9 +27,26 @@ export default function PricingLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "@id": "https://www.scanmysaas.com/pricing#faq",
-    mainEntity: pricingFaqs.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })),
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        "@id": "https://www.scanmysaas.com/pricing#faq",
+        mainEntity: pricingFaqs.map(([question, answer]) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })),
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://www.scanmysaas.com/#software-application",
+        name: "ScanMySaaS",
+        url: "https://www.scanmysaas.com",
+        applicationCategory: "SecurityApplication",
+        operatingSystem: "Any",
+        offers: [
+          { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD", url: "https://www.scanmysaas.com/pricing" },
+          { "@type": "Offer", name: "Starter", price: "29", priceCurrency: "USD", url: "https://www.scanmysaas.com/pricing", priceSpecification: { "@type": "UnitPriceSpecification", price: "29", priceCurrency: "USD", unitText: "MONTH" } },
+          { "@type": "Offer", name: "Pro", price: "79", priceCurrency: "USD", url: "https://www.scanmysaas.com/pricing", priceSpecification: { "@type": "UnitPriceSpecification", price: "79", priceCurrency: "USD", unitText: "MONTH" } },
+        ],
+      },
+    ],
   };
   return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />{children}</>;
 }
